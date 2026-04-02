@@ -93,6 +93,47 @@ st.markdown("""
 /* Conge badge */
 .conge-item { background:#FFFBF3; border-left:4px solid #D4850A; border-radius:8px;
               padding:0.6rem 1rem; margin-bottom:0.5rem; font-size:0.83rem; }
+
+/* Boutons sidebar nav — invisibles visuellement, cliquables */
+[data-testid="stSidebar"] button[kind="secondary"] {
+    background: transparent !important;
+    color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    margin-top: -48px !important;
+    height: 42px !important;
+    opacity: 0 !important;
+    cursor: pointer !important;
+    position: relative !important;
+    z-index: 10 !important;
+}
+
+/* Bouton déconnexion sidebar */
+[data-testid="stSidebar"] button[kind="secondary"]:last-of-type {
+    margin-top: 0 !important;
+    opacity: 1 !important;
+    background: rgba(255,255,255,0.08) !important;
+    color: rgba(255,255,255,0.7) !important;
+    border: 1px solid rgba(255,255,255,0.15) !important;
+    border-radius: 8px !important;
+    font-size: 12px !important;
+}
+[data-testid="stSidebar"] button[kind="secondary"]:last-of-type:hover {
+    background: rgba(239,68,68,0.2) !important;
+    color: #fca5a5 !important;
+    border-color: rgba(239,68,68,0.3) !important;
+}
+
+/* Bouton principal (Accéder) — vert */
+button[kind="primary"] {
+    background: #16a34a !important;
+    border-color: #16a34a !important;
+    color: white !important;
+}
+button[kind="primary"]:hover {
+    background: #15803d !important;
+    border-color: #15803d !important;
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -507,12 +548,10 @@ def _globale():
             st.dataframe(zc, use_container_width=True, height=180)
 
     st.markdown('<div class="stitle">Contrôles-poste programmés</div>', unsafe_allow_html=True)
-    ctrl_display = controles_df.copy()
+    ctrl_display = controles_df[["Mois","Semaine","Periode","Equipe"]].copy()
     ctrl_display["Équipe"] = ctrl_display["Equipe"].apply(lambda x: " · ".join(x) if isinstance(x,list) else str(x))
-    cols_ctrl = [c for c in ["Mois","Semaine","Periode","Équipe"] if c in ctrl_display.columns or c == "Équipe"]
-    ctrl_display = ctrl_display.rename(columns={"Equipe":"Équipe"})
-    st.dataframe(ctrl_display[["Mois","Semaine","Periode","Équipe"]].reset_index(drop=True),
-                 use_container_width=True, height=320)
+    ctrl_display = ctrl_display.drop(columns=["Equipe"])
+    st.dataframe(ctrl_display.reset_index(drop=True), use_container_width=True, height=320)
 
 # ── ÉQUIPE ─────────────────────────────────────────────────────────────────────
 def _equipe(init_courant):
