@@ -259,109 +259,115 @@ def page_dashboard():
         """, unsafe_allow_html=True)
         st.markdown("<div style='height:8px'></div>", unsafe_allow_html=True)
 
-        # ── Navigation SVG : liens HTML cliquables via st.markdown ─────────
+        # ── Navigation : boutons Streamlit purs stylisés en CSS ────────────
         if "nav_page" not in st.session_state:
             st.session_state.nav_page = "stats"
         page = st.session_state.nav_page
 
+        # SVG encodés pour injection dans le CSS via background-image
+        # On injecte un CSS ultra-ciblé par key de bouton
         NAV = [
             ("stats",     "Mes statistiques",
-             '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="3" y="12" width="4" height="9"/><rect x="10" y="6" width="4" height="15"/><rect x="17" y="3" width="4" height="18"/></svg>'),
+             "M3 12h4v9H3zM10 6h4v15h-4zM17 3h4v18h-4z"),
             ("missions",  "Mes inspections",
-             '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>'),
+             "M3 4h18a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H3V4zM16 2v4M8 2v4M3 10h18"),
             ("controles", "Contrôles-poste",
-             '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>'),
+             "M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10zM9 12l2 2 4-4"),
             ("conges",    "Mes congés",
-             '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/></svg>'),
+             "M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42M12 7a5 5 0 1 0 0 10A5 5 0 0 0 12 7z"),
             ("globale",   "Vue globale",
-             '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>'),
+             "M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2zM2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10A15.3 15.3 0 0 1 12 2z"),
             ("equipe",    "Équipe",
-             '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>'),
+             "M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 7a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"),
         ]
 
-        # CSS nav
-        st.markdown("""
+        # CSS global pour les boutons nav de la sidebar
+        nav_css = """
         <style>
-        [data-testid="stSidebar"] .nav-btn {
-            display: flex; align-items: center; gap: 9px;
-            padding: 7px 12px; margin: 1px 4px;
-            border-radius: 7px; cursor: pointer;
-            border-left: 3px solid transparent;
-            transition: all .15s; text-decoration: none;
-        }
-        [data-testid="stSidebar"] .nav-btn:hover {
-            background: rgba(255,255,255,0.08);
-        }
-        [data-testid="stSidebar"] .nav-btn.active {
-            background: rgba(255,255,255,0.13);
-            border-left-color: #4ade80;
-        }
-        [data-testid="stSidebar"] .nav-btn svg { flex-shrink:0; }
-        [data-testid="stSidebar"] .nav-lbl {
-            font-size: 12.5px; font-weight: 400; color: rgba(255,255,255,0.65);
-        }
-        [data-testid="stSidebar"] .nav-btn.active .nav-lbl {
-            color: #fff; font-weight: 600;
-        }
-        [data-testid="stSidebar"] .nav-btn:hover .nav-lbl { color: #fff; }
-        [data-testid="stSidebar"] .nav-btn svg { color: rgba(255,255,255,0.5); }
-        [data-testid="stSidebar"] .nav-btn.active svg,
-        [data-testid="stSidebar"] .nav-btn:hover svg { color: #fff; }
-        /* Boutons nav : invisibles (superposés sous le HTML visuel) */
-        [data-testid="stSidebar"] .nav-hidden { margin: 0 !important; }
-        [data-testid="stSidebar"] .nav-hidden button {
-            position: absolute !important; opacity: 0 !important;
-            height: 32px !important; width: 85% !important;
-            cursor: pointer !important; z-index: 5 !important;
-            margin-top: -32px !important;
-        }
-        /* Bouton déconnexion : visible et stylisé */
-        [data-testid="stSidebar"] .nav-logout button {
-            background: rgba(255,255,255,0.07) !important;
-            border: 1px solid rgba(255,255,255,0.15) !important;
-            border-radius: 7px !important;
-            color: rgba(255,255,255,0.6) !important;
-            font-size: 12px !important;
-            box-shadow: none !important;
-            padding: 6px 12px !important;
+        /* Reset total des boutons sidebar */
+        [data-testid="stSidebar"] .stButton > button {
             display: flex !important;
             align-items: center !important;
-            gap: 6px !important;
+            gap: 0 !important;
+            width: 100% !important;
+            padding: 7px 10px 7px 12px !important;
+            margin: 1px 0 !important;
+            background: transparent !important;
+            border: none !important;
+            border-left: 3px solid transparent !important;
+            border-radius: 0 6px 6px 0 !important;
+            color: rgba(255,255,255,0.6) !important;
+            font-size: 12.5px !important;
+            font-weight: 400 !important;
+            text-align: left !important;
+            justify-content: flex-start !important;
+            box-shadow: none !important;
+            transition: all 0.15s !important;
+            line-height: 1.3 !important;
         }
-        [data-testid="stSidebar"] .nav-logout button:hover {
+        [data-testid="stSidebar"] .stButton > button:hover {
+            background: rgba(255,255,255,0.08) !important;
+            color: white !important;
+            border-left-color: rgba(74,222,128,0.4) !important;
+        }
+        [data-testid="stSidebar"] .nav-active > .stButton > button {
+            background: rgba(255,255,255,0.12) !important;
+            border-left-color: #4ade80 !important;
+            color: white !important;
+            font-weight: 600 !important;
+        }
+        [data-testid="stSidebar"] .nav-logout > .stButton > button {
+            margin-top: 4px !important;
+            border-radius: 6px !important;
+            border-left: none !important;
+            border: 1px solid rgba(255,255,255,0.12) !important;
+            color: rgba(255,255,255,0.5) !important;
+            font-size: 11.5px !important;
+            justify-content: center !important;
+        }
+        [data-testid="stSidebar"] .nav-logout > .stButton > button:hover {
             background: rgba(220,38,38,0.2) !important;
             color: #fca5a5 !important;
             border-color: rgba(220,38,38,0.3) !important;
         }
+        /* Supprimer les marges parasites Streamlit */
+        [data-testid="stSidebar"] .stButton { margin-bottom: 0 !important; }
+        [data-testid="stSidebar"] [data-testid="stVerticalBlock"] > div { gap: 0 !important; }
         </style>
-        """, unsafe_allow_html=True)
+        """
+        st.markdown(nav_css, unsafe_allow_html=True)
 
-        for key, label, ico in NAV:
-            active_cls = "active" if page == key else ""
-            # Visuel HTML
-            st.markdown(f"""
-            <div class="nav-btn {active_cls}">
-                <span style="display:flex;align-items:center;color:inherit">{ico}</span>
-                <span class="nav-lbl">{label}</span>
-            </div>
-            """, unsafe_allow_html=True)
-            # Bouton invisible superposé (capte le clic)
-            st.markdown('<div class="nav-hidden">', unsafe_allow_html=True)
-            if st.button(label, key=f"nav_{key}", use_container_width=True):
+        SVG_ICONS = {
+            "stats":     '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:9px;flex-shrink:0"><rect x="3" y="12" width="4" height="9"/><rect x="10" y="6" width="4" height="15"/><rect x="17" y="3" width="4" height="18"/></svg>',
+            "missions":  '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:9px;flex-shrink:0"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>',
+            "controles": '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:9px;flex-shrink:0"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>',
+            "conges":    '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:9px;flex-shrink:0"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/></svg>',
+            "globale":   '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:9px;flex-shrink:0"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>',
+            "equipe":    '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:9px;flex-shrink:0"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
+            "logout":    '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:7px;flex-shrink:0"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>',
+        }
+
+        for key, label, _ in NAV:
+            active_cls = "nav-active" if page == key else "nav-item"
+            # Label avec SVG inline — Streamlit accepte le HTML dans st.button via unsafe_allow_html=False
+            # mais PAS dans le label. On injecte via markdown juste avant pour simuler.
+            # Solution : on utilise st.markdown pour injecter le wrapper de classe seulement
+            st.markdown(f'<div class="{active_cls}">', unsafe_allow_html=True)
+            lbl = f"{SVG_ICONS[key]}{label}"
+            if st.button(lbl, key=f"nav_{key}", use_container_width=True):
                 st.session_state.nav_page = key
                 st.rerun()
             st.markdown('</div>', unsafe_allow_html=True)
 
-        st.markdown("<div style='border-top:1px solid rgba(255,255,255,0.1);margin:10px 4px 6px;'></div>",
+        st.markdown("<div style='border-top:1px solid rgba(255,255,255,0.1);margin:8px 4px 4px;'></div>",
                     unsafe_allow_html=True)
         st.markdown('<div class="nav-logout">', unsafe_allow_html=True)
-        if st.button("Déconnexion", key="nav_logout", use_container_width=True):
+        if st.button(f"{SVG_ICONS['logout']}Déconnexion", key="nav_logout", use_container_width=True):
             st.session_state.logged_in = False
             st.session_state.initiale = ""
             st.session_state.nav_page = "stats"
             st.rerun()
         st.markdown('</div>', unsafe_allow_html=True)
-
     # Router
     page = st.session_state.get("nav_page", "stats")
     if page == "stats":      _stats(init, charge, missions, conges, controles)
