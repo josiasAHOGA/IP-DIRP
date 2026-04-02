@@ -282,8 +282,8 @@ def page_dashboard():
                 <span style="color:{color};font-size:13px;font-weight:{fw};">{label}</span>
             </div>
             """, unsafe_allow_html=True)
-            if st.button(label, key=f"nav_{key}", use_container_width=True,
-                         label_visibility="collapsed"):
+            # Bouton invisible superposé — label_visibility non supporté pour st.button
+            if st.button(label, key=f"nav_{key}", use_container_width=True):
                 st.session_state.nav_page = key
                 st.rerun()
         st.markdown("</div>", unsafe_allow_html=True)
