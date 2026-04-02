@@ -307,29 +307,31 @@ def page_dashboard():
         [data-testid="stSidebar"] .nav-btn svg { color: rgba(255,255,255,0.5); }
         [data-testid="stSidebar"] .nav-btn.active svg,
         [data-testid="stSidebar"] .nav-btn:hover svg { color: #fff; }
-        /* Masquer les vrais boutons Streamlit sous le HTML */
-        [data-testid="stSidebar"] .stButton { margin: 0 !important; }
-        [data-testid="stSidebar"] .stButton button {
-            position: absolute; opacity: 0; height: 34px;
-            width: 100%; cursor: pointer; z-index: 5;
-            margin-top: -34px;
+        /* Boutons nav : invisibles (superposés sous le HTML visuel) */
+        [data-testid="stSidebar"] .nav-hidden { margin: 0 !important; }
+        [data-testid="stSidebar"] .nav-hidden button {
+            position: absolute !important; opacity: 0 !important;
+            height: 32px !important; width: 85% !important;
+            cursor: pointer !important; z-index: 5 !important;
+            margin-top: -32px !important;
         }
-        [data-testid="stSidebar"] .btn-deco { position: static !important; }
-        [data-testid="stSidebar"] .btn-deco button {
-            position: static !important; opacity: 1 !important;
-            margin-top: 0 !important; height: auto !important;
-            background: rgba(255,255,255,0.06) !important;
-            border: 1px solid rgba(255,255,255,0.12) !important;
+        /* Bouton déconnexion : visible et stylisé */
+        [data-testid="stSidebar"] .nav-logout button {
+            background: rgba(255,255,255,0.07) !important;
+            border: 1px solid rgba(255,255,255,0.15) !important;
             border-radius: 7px !important;
-            color: rgba(255,255,255,0.55) !important;
-            font-size: 11.5px !important;
+            color: rgba(255,255,255,0.6) !important;
+            font-size: 12px !important;
             box-shadow: none !important;
             padding: 6px 12px !important;
+            display: flex !important;
+            align-items: center !important;
+            gap: 6px !important;
         }
-        [data-testid="stSidebar"] .btn-deco button:hover {
-            background: rgba(220,38,38,0.18) !important;
+        [data-testid="stSidebar"] .nav-logout button:hover {
+            background: rgba(220,38,38,0.2) !important;
             color: #fca5a5 !important;
-            border-color: rgba(220,38,38,0.25) !important;
+            border-color: rgba(220,38,38,0.3) !important;
         }
         </style>
         """, unsafe_allow_html=True)
@@ -344,13 +346,15 @@ def page_dashboard():
             </div>
             """, unsafe_allow_html=True)
             # Bouton invisible superposé (capte le clic)
+            st.markdown('<div class="nav-hidden">', unsafe_allow_html=True)
             if st.button(label, key=f"nav_{key}", use_container_width=True):
                 st.session_state.nav_page = key
                 st.rerun()
+            st.markdown('</div>', unsafe_allow_html=True)
 
         st.markdown("<div style='border-top:1px solid rgba(255,255,255,0.1);margin:10px 4px 6px;'></div>",
                     unsafe_allow_html=True)
-        st.markdown('<div class="btn-deco">', unsafe_allow_html=True)
+        st.markdown('<div class="nav-logout">', unsafe_allow_html=True)
         if st.button("Déconnexion", key="nav_logout", use_container_width=True):
             st.session_state.logged_in = False
             st.session_state.initiale = ""
