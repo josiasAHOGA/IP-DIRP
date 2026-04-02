@@ -264,6 +264,13 @@ def page_dashboard():
         /* Masquer le cercle radio natif */
         [data-testid="stSidebar"] [data-baseweb="radio"] { display:none !important; }
 
+        /* Supprimer les points/puces et spans parasites dans le label */
+        [data-testid="stSidebar"] [data-testid="stRadio"] > div > label > div { display:none !important; }
+        [data-testid="stSidebar"] [data-testid="stRadio"] > div > label > span:first-child { display:none !important; }
+        [data-testid="stSidebar"] [data-testid="stRadio"] p { margin:0 !important; }
+        [data-testid="stSidebar"] [data-testid="stRadio"] > div > label::marker { content:none !important; }
+        [data-testid="stSidebar"] [data-testid="stRadio"] > div > label > span[data-baseweb] { display:none !important; }
+
         /* Supprimer les gaps entre items */
         [data-testid="stSidebar"] [data-testid="stRadio"] > div { gap:0 !important; }
 
@@ -315,8 +322,12 @@ def page_dashboard():
             background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22rgba%28255%2C255%2C255%2C0.7%29%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M17%2021v-2a4%204%200%200%200-4-4H5a4%204%200%200%200-4%204v2%22/%3E%3Ccircle%20cx%3D%229%22%20cy%3D%227%22%20r%3D%224%22/%3E%3Cpath%20d%3D%22M23%2021v-2a4%204%200%200%200-3-3.87%22/%3E%3Cpath%20d%3D%22M16%203.13a4%204%200%200%201%200%207.75%22/%3E%3C/svg%3E") !important;
         }
         /* Bouton déconnexion */
-        [data-testid="stSidebar"] .deco-logout > button {
+        [data-testid="stSidebar"] .deco-logout > button,
+        [data-testid="stSidebar"] .deco-logout > button:focus,
+        [data-testid="stSidebar"] .deco-logout > button:active,
+        [data-testid="stSidebar"] .deco-logout > button:visited {
             background: #16a34a !important;
+            background-color: #16a34a !important;
             border: none !important;
             border-radius: 7px !important;
             color: white !important;
