@@ -99,7 +99,10 @@ html, body, [class*="css"] { font-family: 'Segoe UI', sans-serif; }
 """, unsafe_allow_html=True)
 
 # ── Data Loading ───────────────────────────────────────────────────────────────
-DATA_FILE = Path(__file__).parent / "Book5_OK__1_.xlsx"
+import os
+DATA_FILE = Path(os.path.join(os.path.dirname(os.path.abspath(__file__)), "Book5_OK__1_.xlsx"))
+if not DATA_FILE.exists():
+    DATA_FILE = Path("Book5_OK__1_.xlsx")
 MOIS_SHEETS = ["Avril", "Mai", "Juin", "Juillet", "Aout", "Septembre", "Octobre", "Novembre", "Decembre"]
 
 @st.cache_data
